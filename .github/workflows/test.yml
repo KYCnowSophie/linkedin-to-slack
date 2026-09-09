@@ -1,7 +1,14 @@
-name: Test
+name: LinkedIn Test
 on: workflow_dispatch
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "GitHub Actions works"
+      - name: KYCnow LinkedIn prüfen
+        run: |
+          curl -L -A "Mozilla/5.0" -s -o linkedin.html -w "HTTP Status: %{http_code}\n" "https://www.linkedin.com/company/kycnow/posts/"
+          echo "Dateigröße:"
+          wc -c linkedin.html
+          echo "Seitentitel:"
+          grep -o '<title>[^<]*' linkedin.html | head -1
