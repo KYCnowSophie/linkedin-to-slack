@@ -1,4 +1,4 @@
-name: LinkedIn Test
+name: LinkedIn Company Test
 
 on:
   workflow_dispatch:
@@ -7,9 +7,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check LinkedIn posts
+      - name: Check company posts
         shell: bash
         run: |
-          curl -L -A "Mozilla/5.0" -s -o linkedin.html "https://www.linkedin.com/company/kycnow/posts/"
-          echo "Activity IDs:"
-          grep -oE '(activity-|activity:)[0-9]{10,}' linkedin.html | head -20 || true
+          curl -L -A "Mozilla/5.0" -s -o linkedin.html "https://www.linkedin.com/company/kycnow/"
+          echo "Post markers:"
+          grep -oE 'data-activity-urn="[^"]+"|main-feed-card__overlay-link|updates__list' linkedin.html | head -20 || true
