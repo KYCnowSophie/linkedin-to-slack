@@ -10,5 +10,5 @@ jobs:
           curl -L -A "Mozilla/5.0" -s -o linkedin.html -w "HTTP Status: %{http_code}\n" "https://www.linkedin.com/company/kycnow/posts/"
           echo "Dateigröße:"
           wc -c linkedin.html
-          echo "Seitentitel:"
-          grep -o '<title>[^<]*' linkedin.html | head -1
+       echo "Post-Hinweise:"
+grep -oE 'activity:[0-9]+|/posts/[^" ]+' linkedin.html | head -10
