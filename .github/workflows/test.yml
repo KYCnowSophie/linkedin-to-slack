@@ -1,14 +1,17 @@
 name: LinkedIn Test
-on: workflow_dispatch
+
+on:
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: KYCnow LinkedIn prüfen
+      - name: Check LinkedIn
+        shell: bash
         run: |
           curl -L -A "Mozilla/5.0" -s -o linkedin.html -w "HTTP Status: %{http_code}\n" "https://www.linkedin.com/company/kycnow/posts/"
-          echo "Dateigröße:"
+          echo "File size:"
           wc -c linkedin.html
-       echo "Post-Hinweise:"
-grep -oE 'activity:[0-9]+|/posts/[^" ]+' linkedin.html | head -10
+          echo "Post hints:"
+          grep -oE 'activity:[0-9]+|/posts/[^" ]+' linkedin.html | head -10 || true
