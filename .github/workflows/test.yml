@@ -1,15 +1,31 @@
-name: LinkedIn Company Test
+name: RSS Feed erstellen
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check company posts
-        shell: bash
+      - name: Repository laden
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: RSS Feed erzeugen
+        run: python generate_feed.py
+
+      - name: Feed speichern
         run: |
-          curl -L -A "Mozilla/5.0" -s -o linkedin.html "https://www.linkedin.com/company/kycnow/"
-          echo "Post markers:"
-          grep -oE 'data-activity-urn="[^"]+"|main-feed-card__overlay-link|updates__list' linkedin.html | head -20 || true
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add feed.xml
+          git commit -m "Update LinkedIn RSS feed" || echo "Keine Änderungen"
+          git push
