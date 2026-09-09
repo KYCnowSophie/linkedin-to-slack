@@ -7,11 +7,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check LinkedIn
+      - name: Check LinkedIn posts
         shell: bash
         run: |
-          curl -L -A "Mozilla/5.0" -s -o linkedin.html -w "HTTP Status: %{http_code}\n" "https://www.linkedin.com/company/kycnow/posts/"
-          echo "File size:"
-          wc -c linkedin.html
-          echo "Post hints:"
-          grep -oE 'activity:[0-9]+|/posts/[^" ]+' linkedin.html | head -10 || true
+          curl -L -A "Mozilla/5.0" -s -o linkedin.html "https://www.linkedin.com/company/kycnow/posts/"
+          echo "Activity IDs:"
+          grep -oE '(activity-|activity:)[0-9]{10,}' linkedin.html | head -20 || true
