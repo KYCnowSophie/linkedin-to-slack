@@ -2,9 +2,15 @@ name: RSS Feed erstellen
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/30 * * * *"
 
 permissions:
   contents: write
+
+concurrency:
+  group: linkedin-rss
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -19,13 +25,25 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: RSS Feed erzeugen
+      - name: LinkedIn prüfen
         run: python generate_feed.py
 
-      - name: Feed speichern
+      - name: Änderungen speichern
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add feed.xml
-          git commit -m "Update LinkedIn RSS feed" || echo "Keine Änderungen"
+
+          git add last_seen.txt
+
+          if grep -q "<item>" feed.xml; then
+            git add feed.xml
+          fi
+
+          if git diff --cached --quiet; then
+            echo "Keine neuen LinkedIn-Posts."
+            exit 0
+          fi
+
+          git commit -m "Update LinkedIn RSS feed"
+          git pull --rebase origin main
           git push
