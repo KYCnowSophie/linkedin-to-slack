@@ -37,10 +37,12 @@ jobs:
 
           if grep -q "<item>" feed.xml; then
             git add feed.xml
+          else
+            git restore feed.xml || true
           fi
 
           if git diff --cached --quiet; then
-            echo "Keine neuen LinkedIn-Posts."
+            echo "Keine Änderungen."
             exit 0
           fi
 
