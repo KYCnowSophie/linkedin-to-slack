@@ -3,7 +3,7 @@ name: RSS Feed erstellen
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "7,22,37,52 * * * *"
 
 permissions:
   contents: write
