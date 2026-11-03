@@ -11,13 +11,16 @@ jobs:
       - name: Christian Profil prüfen
         shell: bash
         run: |
-          curl -L -A "Mozilla/5.0" -s -o christian.html "https://www.linkedin.com/in/christian-schaper/recent-activity/all/"
+          curl -L -A "Mozilla/5.0" -s -o christian.html "https://www.linkedin.com/in/christian-schaper/"
 
           echo "Dateigröße:"
           wc -c christian.html
 
-          echo "Gefundene Post-IDs:"
-          grep -oE '(activity-|activity:)[0-9]{10,}' christian.html | head -20 || true
+          echo "Post-Bereich:"
+          grep -oE 'public_profile__posts|updates__list' christian.html | head -10 || true
 
-          echo "Weitere Post-Hinweise:"
-          grep -oE 'data-activity-urn="[^"]+"|/posts/[^" ]+' christian.html | head -20 || true
+          echo "Activity IDs:"
+          grep -oE 'urn:li:activity:[0-9]+' christian.html | head -20 || true
+
+          echo "Post Links:"
+          grep -oE 'https?[^" ]+linkedin.com/posts/[^" ]+' christian.html | head -20 || true
