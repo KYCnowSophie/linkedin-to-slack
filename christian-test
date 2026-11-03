@@ -1,0 +1,23 @@
+name: Christian LinkedIn Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Christian Profil prüfen
+        shell: bash
+        run: |
+          curl -L -A "Mozilla/5.0" -s -o christian.html "https://www.linkedin.com/in/christian-schaper/recent-activity/all/"
+
+          echo "Dateigröße:"
+          wc -c christian.html
+
+          echo "Gefundene Post-IDs:"
+          grep -oE '(activity-|activity:)[0-9]{10,}' christian.html | head -20 || true
+
+          echo "Weitere Post-Hinweise:"
+          grep -oE 'data-activity-urn="[^"]+"|/posts/[^" ]+' christian.html | head -20 || true
